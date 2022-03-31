@@ -52,7 +52,7 @@ public class UserController{
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PostMapping(value = "/logoff", produces = "application/json", consumes = "application/json")
+    @PostMapping(value = "/logoff", produces = "application/json")
     public DefaultResponseEnvelope<String> logoff(HttpSession session){
         return new DefaultResponseEnvelope<>(
                 true,
