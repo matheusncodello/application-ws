@@ -1,6 +1,5 @@
 package com.sptech.applicationws.infra.configurations.security;
 
-import com.sptech.applicationws.service.user.UserService;
 import com.sptech.applicationws.service.user.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,11 +29,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] USER_URI = {
-            "/donation/**"
+            "/user/logoff",
+            "/donation/**",
+            "/campaign/get-campaign", "/campaign/get-single-campaign", "/campaign/get-favorite-campaign",
+            "/campaign/favorite-campaign", "/campaign/unfavorite-campaign", "/campaign/get-ong-campaign/"
     };
 
     private static final String[] ONG_URI = {
-            "/campaign/**"
+            "/user/logoff",
+            "/campaign/**",
+            "/donation/get-donation", "/donation/get-single-donation", "/donation/get-favorite-donation",
+            "/donation/favorite-donation", "/donation/unfavorite-donation", "/donation/get-user-donation/"
     };
 
     @Override

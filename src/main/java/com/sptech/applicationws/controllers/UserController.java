@@ -2,8 +2,10 @@ package com.sptech.applicationws.controllers;
 
 import com.sptech.applicationws.controllers.dto.DefaultResponseEnvelope;
 import com.sptech.applicationws.controllers.dto.request.LoginRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.PostAccessRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.UserRegisterRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
+import com.sptech.applicationws.domain.PostAccess;
 import com.sptech.applicationws.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -53,10 +55,24 @@ public class UserController{
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
     @PostMapping(value = "/logoff", produces = "application/json")
-    public DefaultResponseEnvelope<String> logoff(HttpSession session){
+    public DefaultResponseEnvelope<String> logoff(){
         return new DefaultResponseEnvelope<>(
                 true,
                 userService.logoff()
+        );
+    }
+
+    @ApiOperation(value = "Efetua o log de acessos de um post a partir de um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Efetua o acesso com sucesso."),
+            @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
+            @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
+    })
+    @PostMapping(value = "/register-post-access", consumes = "application/json")
+    public DefaultResponseEnvelope<String> registerPostAccess(@RequestBody PostAccessRequestDTO postAccess){
+        return new DefaultResponseEnvelope<>(
+                true,
+                userService.registerPostAccess(postAccess)
         );
     }
 }

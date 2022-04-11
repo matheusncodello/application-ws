@@ -1,24 +1,41 @@
 package com.sptech.applicationws.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-@Entity(name = "tb_address")
+@Entity
+@Table(name = "tb_address")
 public class Address{
+    @NotNull
     @Id
     @Column(name = "fk_user")
     private Long fkUser;
+
+    @NotBlank
     @Column(name = "address_cep")
     private String cep;
+
+    @NotBlank
     @Column(name = "address_street")
     private String street;
+
+    @NotBlank
     @Column(name = "address_street_number")
     private String streetNumber;
+
     @Column(name = "address_street_complement")
     private String streetComplement;
+
+    @NotBlank
     @Column(name = "address_district")
     private String district;
+
+    @NotBlank
     @Column(name = "address_city")
     private String city;
+
+    @NotBlank
     @Column(name = "address_state")
     private String state;
 

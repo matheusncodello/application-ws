@@ -1,6 +1,7 @@
 package com.sptech.applicationws.service.user;
 
 import com.sptech.applicationws.controllers.dto.request.LoginRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.PostAccessRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.UserRegisterRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,8 @@ public interface UserService extends UserDetailsService {
     UserResponseDTO login(@RequestBody LoginRequestDTO user);
 
     String logoff();
+
+    String registerPostAccess(PostAccessRequestDTO postAccess);
 
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;

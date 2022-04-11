@@ -1,14 +1,17 @@
 package com.sptech.applicationws.service.user.impl;
 
 import com.sptech.applicationws.controllers.dto.request.LoginRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.PostAccessRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.UserRegisterRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.AddressResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
 import com.sptech.applicationws.domain.Address;
+import com.sptech.applicationws.domain.PostAccess;
 import com.sptech.applicationws.domain.User;
 import com.sptech.applicationws.infra.configurations.exception.UserExistsException;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
 import com.sptech.applicationws.infra.database.AddressRepository;
+import com.sptech.applicationws.infra.database.PostAccessRepository;
 import com.sptech.applicationws.infra.database.UserRepository;
 import com.sptech.applicationws.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -31,12 +37,15 @@ public class UserServiceImpl implements UserService{
     private AddressRepository addressRepository;
 
     @Autowired
+    private PostAccessRepository postAccessRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public String register(UserRegisterRequestDTO user) {
         if (userRepository.findByEmail(user.getEmail()) != null || userRepository.findByDocument(user.getDocument()) != null) {
-            throw new UserExistsException("User already registered.");
+            throw new UserExistsException("Usuário já existente.");
         }
 
         User newUser = userRepository.save(new User(
@@ -59,7 +68,7 @@ public class UserServiceImpl implements UserService{
                 user.getState()
         ));
 
-        return "User registered successfully.";
+        return "Usuário registrado com sucesso.";
     }
 
     @Override
@@ -75,7 +84,7 @@ public class UserServiceImpl implements UserService{
             Optional<Address> fullAddress = addressRepository.findById(loggedUser.getUserId());
 
             if(loggedUser == null){
-                throw new NotFoundException("User not found or bad credentials.");
+                throw new NotFoundException("O usuário não foi encontrado ou credenciais inválidas.");
             } else {
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(
@@ -104,14 +113,31 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        throw new NotFoundException("User not found.");
+        throw new NotFoundException("O usuário não foi encontrado.");
     }
 
     @Override
     public String logoff() {
         SecurityContextHolder.clearContext();
 
-        return "User successfully logged out.";
+        return "Logoff do usuário feito com sucesso.";
+    }
+
+    @Override
+    public String registerPostAccess(PostAccessRequestDTO postAccess) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp dateFormatted = Timestamp.valueOf(sdf.format(new Date()));
+
+        postAccessRepository.save(
+                new PostAccess(
+                        postAccess.getFkUser(),
+                        postAccess.getFkDonation(),
+                        postAccess.getFkCampaign(),
+                        dateFormatted
+                )
+        );
+
+        return "Registro efetuado com sucesso.";
     }
 
     @Override
@@ -123,7 +149,7 @@ public class UserServiceImpl implements UserService{
                 : userRepository.findByDocument(username));
 
         if(loggedUser.isEmpty()){
-            throw new NotFoundException("User not found.");
+            throw new NotFoundException("O usuário não foi encontrado.");
         }
 
         User user = loggedUser.get();

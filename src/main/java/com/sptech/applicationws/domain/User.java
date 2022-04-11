@@ -1,23 +1,42 @@
 package com.sptech.applicationws.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Entity(name = "tb_user")
+@Entity
+@Table(name = "tb_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
+
+    @NotBlank
     @Column(name = "user_name")
     private String username;
+
+    @Size(min = 11, max = 14)
+    @NotBlank
     @Column(name = "user_document")
     private String document;
+
+    @Size(min = 8, max = 11)
+    @NotNull
     @Column(name = "user_phone")
     private Long phoneNumber;
+
+    @Email
+    @NotBlank
     @Column(name = "user_email")
     private String email;
+
+    @NotBlank
     @Column(name = "user_password")
     private String password;
+
     @Column(name = "is_ong")
     private boolean isOng;
 
