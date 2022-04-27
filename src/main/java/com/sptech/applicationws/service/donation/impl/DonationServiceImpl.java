@@ -1,14 +1,14 @@
 package com.sptech.applicationws.service.donation.impl;
 
 import com.sptech.applicationws.controllers.dto.request.DonationRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.EditDonationRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.AddressResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.DonationResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
 import com.sptech.applicationws.domain.*;
 import com.sptech.applicationws.domain.Donation;
-import com.sptech.applicationws.domain.model.FavoriteCampaignId;
-import com.sptech.applicationws.domain.model.FavoriteDonationId;
+import com.sptech.applicationws.domain.helpers.FavoriteDonationId;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
 import com.sptech.applicationws.infra.database.AddressRepository;
 import com.sptech.applicationws.infra.database.DonationRepository;
@@ -123,11 +123,32 @@ public class DonationServiceImpl implements DonationService {
 
     @Override
     public List<DonationResponseDTO> getFavoriteDonation(Long ongId) {
-        return null;
+        Optional<User> foundUser = userRepository.findById(ongId);
+        if (foundUser.isEmpty()) {
+            throw new NotFoundException("O ID do usuário não foi encontrado.");
+        }
+
+        List<Donation> favoriteDonations = donationRepository.getFavoriteDonation(ongId);
+        List<DonationResponseDTO> result = new ArrayList<>();
+
+        for(Donation d : favoriteDonations){
+            DonationResponseDTO donationResponse = new DonationResponseDTO(
+                    d.getDonationId(),
+                    toResponseDTO(d.getFkUser()),
+                    d.getDonationName(),
+                    d.getDonationDescription(),
+                    d.getDonationType(),
+                    d.getDonationImage()
+            );
+
+            result.add(donationResponse);
+        }
+
+        return result;
     }
 
     @Override
-    public String editDonation(Long id, DonationRequestDTO newDonation) {
+    public String editDonation(Long id, EditDonationRequestDTO newDonation) {
         Optional<Donation> foundDonation = donationRepository.findById(id);
 
         if (foundDonation.isPresent()) {
@@ -136,7 +157,7 @@ public class DonationServiceImpl implements DonationService {
             donation.setDonationName(newDonation.getDonationName());
             donation.setDonationDescription(newDonation.getDonationDescription());
             donation.setDonationImage(newDonation.getDonationImage());
-            donation.setDonationType(newDonation.getDonationType().toString());
+            donation.setDonationType(newDonation.getDonationType().getDescription());
 
             donationRepository.save(donation);
 
@@ -165,16 +186,27 @@ public class DonationServiceImpl implements DonationService {
 
     @Override
     public String favoriteDonation(FavoriteRequestDTO favorite) {
-        favoriteDonationRepository.save(
-                new FavoriteDonation(
-                        new FavoriteDonationId(
-                                favorite.getUserId(),
-                                favorite.getPostId()
-                        )
-                )
-        );
+        Optional<User> foundUser = userRepository.findById(favorite.getUserId());
+        Optional<Donation> foundDonation = donationRepository.findById(favorite.getPostId());
 
-        return "Doação favoritada com sucesso.";
+        if (foundUser.isPresent() && foundDonation.isPresent()){
+            favoriteDonationRepository.save(
+                    new FavoriteDonation(
+                            new FavoriteDonationId(
+                                    favorite.getUserId(),
+                                    favorite.getPostId()
+                            )
+                    )
+            );
+
+            return "Doação favoritada com sucesso.";
+        } else if (foundUser.isPresent()) {
+            throw new NotFoundException("O ID da doação não foi encontrada.");
+        } else if (foundDonation.isPresent()) {
+            throw new NotFoundException("O ID do usuário não foi encontrado.");
+        }
+
+        throw new NotFoundException("Os ID não foi encontrados.");
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.sptech.applicationws.controllers;
 
 import com.sptech.applicationws.controllers.dto.DefaultResponseEnvelope;
 import com.sptech.applicationws.controllers.dto.request.CampaignRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.EditCampaignRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.CampaignResponseDTO;
 import com.sptech.applicationws.service.campaign.CampaignService;
@@ -96,8 +97,8 @@ public class CampaignController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/edit-campaign/{id}", produces = "application/json", consumes = "application/json")
-    public DefaultResponseEnvelope<String> editCampaign(@PathVariable Long id, @RequestBody CampaignRequestDTO campaign) {
+    @PutMapping(value = "/edit-campaign/{id}", consumes = "application/json")
+    public DefaultResponseEnvelope<String> editCampaign(@PathVariable Long id, @RequestBody EditCampaignRequestDTO campaign) {
         return new DefaultResponseEnvelope<>(
                 true,
                 campaignService.editCampaign(id, campaign)
@@ -110,7 +111,7 @@ public class CampaignController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/end-campaign/{id}", produces = "application/json", consumes = "application/json")
+    @PutMapping(value = "/end-campaign/{id}")
     public DefaultResponseEnvelope<String> deleteCampaign(@PathVariable Long id) {
         return new DefaultResponseEnvelope<>(
                 true,
@@ -124,7 +125,7 @@ public class CampaignController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PostMapping(value = "/favorite-campaign/", consumes = "application/json")
+    @PostMapping(value = "/favorite-campaign", consumes = "application/json")
     public DefaultResponseEnvelope<String> favoriteCampaign(@RequestBody FavoriteRequestDTO favorite){
         return new DefaultResponseEnvelope<>(
                 true,
@@ -138,7 +139,7 @@ public class CampaignController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @DeleteMapping(value = "/unfavorite-campaign/", consumes = "application/json")
+    @DeleteMapping(value = "/unfavorite-campaign", consumes = "application/json")
     public DefaultResponseEnvelope<String> unfavoriteCampaign(@RequestBody FavoriteRequestDTO favorite){
         return new DefaultResponseEnvelope<>(
                 true,

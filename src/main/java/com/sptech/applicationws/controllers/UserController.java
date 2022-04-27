@@ -75,4 +75,18 @@ public class UserController{
                 userService.registerPostAccess(postAccess)
         );
     }
+
+    @ApiOperation(value = "Gera um relatório com todas as publicações de um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Gera o relatório com sucesso."),
+            @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
+            @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
+    })
+    @GetMapping(value = "/get-post-history/{userId}")
+    public DefaultResponseEnvelope<String> getPostHistory(@PathVariable Long userId){
+        return new DefaultResponseEnvelope<>(
+                true,
+                userService.getPostHistory(userId)
+        );
+    }
 }

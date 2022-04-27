@@ -24,22 +24,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserServiceImpl userService;
 
     private static final String[] PUBLIC_URI = {
-            "/user/login", "/user/register", "/h2-console/**",
+            "/user/**", "/h2-console/**",
             "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"
     };
 
+    private static final String[] AUTH_URI = {
+            "/donation/get-donation", "/campaign/get-campaign",
+            "/donation/get-single-donation", "/campaign/get-single-campaign",
+            "/donation/get-user-donation", "/campaign/get-ong-campaign"
+    };
+
     private static final String[] USER_URI = {
-            "/user/logoff",
-            "/donation/**",
-            "/campaign/get-campaign", "/campaign/get-single-campaign", "/campaign/get-favorite-campaign",
-            "/campaign/favorite-campaign", "/campaign/unfavorite-campaign", "/campaign/get-ong-campaign/"
+            "/donation/create-donation",
+            "/donation/edit-donation/{id}",
+            "/donation/end-donation/{id}",
+            "/campaign/get-favorite-campaign",
+            "/campaign/favorite-campaign",
+            "/campaign/unfavorite-campaign"
     };
 
     private static final String[] ONG_URI = {
-            "/user/logoff",
-            "/campaign/**",
-            "/donation/get-donation", "/donation/get-single-donation", "/donation/get-favorite-donation",
-            "/donation/favorite-donation", "/donation/unfavorite-donation", "/donation/get-user-donation/"
+            "/campaign/create-campaign",
+            "/campaign/edit-campaign/{id}",
+            "/campaign/end-campaign/{id}",
+            "/donation/get-favorite-donation",
+            "/donation/favorite-donation",
+            "/donation/unfavorite-donation"
     };
 
     @Override
@@ -55,6 +65,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(PUBLIC_URI)
                     .permitAll()
+                .antMatchers(AUTH_URI)
+                    .hasAnyRole("ONG", "USER")
                 .antMatchers(ONG_URI)
                     .hasRole("ONG")
                 .antMatchers(USER_URI)

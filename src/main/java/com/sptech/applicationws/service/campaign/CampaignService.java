@@ -1,6 +1,7 @@
 package com.sptech.applicationws.service.campaign;
 
 import com.sptech.applicationws.controllers.dto.request.CampaignRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.EditCampaignRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.CampaignResponseDTO;
 
@@ -18,7 +19,7 @@ public interface CampaignService {
 
     List<CampaignResponseDTO> getFavoriteCampaign(Long userId);
 
-    String editCampaign(Long id, CampaignRequestDTO campaign);
+    String editCampaign(Long id, EditCampaignRequestDTO campaign);
 
     String deleteCampaign(Long id);
 

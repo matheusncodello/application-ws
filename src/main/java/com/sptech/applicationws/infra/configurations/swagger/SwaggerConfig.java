@@ -23,20 +23,8 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false)
-//                .globalResponseMessage(RequestMethod.GET, responseMessageForGET())
                 .apiInfo(apiInfo());
     }
-
-//    private List<ResponseMessage> responseMessageForGET() {
-//        ArrayList<ResponseMessage> responseMessageList = new ArrayList<>();
-//
-//        responseMessageList.add(new ResponseMessageBuilder()
-//                .code(403)
-//                .message("Forbidden.")
-//                .build());
-//
-//        return responseMessageList;
-//    }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()

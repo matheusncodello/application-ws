@@ -18,12 +18,10 @@ public class User {
     @Column(name = "user_name")
     private String username;
 
-    @Size(min = 11, max = 14)
     @NotBlank
     @Column(name = "user_document")
     private String document;
 
-    @Size(min = 8, max = 11)
     @NotNull
     @Column(name = "user_phone")
     private Long phoneNumber;

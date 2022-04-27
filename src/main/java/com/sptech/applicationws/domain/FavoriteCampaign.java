@@ -1,6 +1,6 @@
 package com.sptech.applicationws.domain;
 
-import com.sptech.applicationws.domain.model.FavoriteCampaignId;
+import com.sptech.applicationws.domain.helpers.FavoriteCampaignId;
 
 import javax.persistence.*;
 import java.io.Serializable;

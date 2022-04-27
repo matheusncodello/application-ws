@@ -5,14 +5,12 @@ import com.sptech.applicationws.controllers.dto.request.PostAccessRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.UserRegisterRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.AddressResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
-import com.sptech.applicationws.domain.Address;
-import com.sptech.applicationws.domain.PostAccess;
-import com.sptech.applicationws.domain.User;
+import com.sptech.applicationws.domain.*;
 import com.sptech.applicationws.infra.configurations.exception.UserExistsException;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.database.AddressRepository;
-import com.sptech.applicationws.infra.database.PostAccessRepository;
-import com.sptech.applicationws.infra.database.UserRepository;
+import com.sptech.applicationws.infra.configurations.mapper.CsvMapper;
+import com.sptech.applicationws.infra.configurations.mapper.ListObj;
+import com.sptech.applicationws.infra.database.*;
 import com.sptech.applicationws.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,6 +33,12 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Autowired
+    private CampaignRepository campaignRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
+
+    @Autowired
     private AddressRepository addressRepository;
 
     @Autowired
@@ -41,6 +46,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CsvMapper csvMapper;
 
     @Override
     public String register(UserRegisterRequestDTO user) {
@@ -138,6 +146,37 @@ public class UserServiceImpl implements UserService{
         );
 
         return "Registro efetuado com sucesso.";
+    }
+
+    @Override
+    public String getPostHistory(Long userId) {
+        Optional<User> userFound = userRepository.findById(userId);
+
+        if (userFound.isPresent()) {
+            if (userFound.get().isOng()) {
+                List<Campaign> listCampaigns = campaignRepository.findByFkOng(userId);
+                ListObj<Campaign> listObj = new ListObj<>(listCampaigns.size());
+
+                for (Campaign c: listCampaigns){
+                    listObj.toAdd(c);
+                }
+
+                csvMapper.writeCampaignCsv(listObj, "campaigns");
+            } else {
+                List<Donation> listDonations = donationRepository.findByFkUser(userId);
+                ListObj<Donation> listObj = new ListObj<>(listDonations.size());
+
+                for (Donation d: listDonations){
+                    listObj.toAdd(d);
+                }
+
+                csvMapper.writeDonationCsv(listObj, "donations");
+            }
+        } else {
+            throw new NotFoundException("O usuário não foi encontrado.");
+        }
+
+        return "Relatório gerado com sucesso";
     }
 
     @Override

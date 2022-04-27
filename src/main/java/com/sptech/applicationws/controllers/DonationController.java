@@ -2,8 +2,8 @@ package com.sptech.applicationws.controllers;
 
 import com.sptech.applicationws.controllers.dto.DefaultResponseEnvelope;
 import com.sptech.applicationws.controllers.dto.request.DonationRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.EditDonationRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
-import com.sptech.applicationws.controllers.dto.response.CampaignResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.DonationResponseDTO;
 import com.sptech.applicationws.service.donation.DonationService;
 import io.swagger.annotations.ApiOperation;
@@ -97,8 +97,8 @@ public class DonationController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/edit-donation/{id}", produces = "application/json", consumes = "application/json")
-    public DefaultResponseEnvelope<String> editDonation(@PathVariable Long id, @RequestBody DonationRequestDTO donation) {
+    @PutMapping(value = "/edit-donation/{id}", consumes = "application/json")
+    public DefaultResponseEnvelope<String> editDonation(@PathVariable Long id, @RequestBody EditDonationRequestDTO donation) {
         return new DefaultResponseEnvelope<>(
                 true,
                 donationService.editDonation(id, donation)
@@ -111,7 +111,7 @@ public class DonationController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/end-donation/{id}", produces = "application/json", consumes = "application/json")
+    @PutMapping(value = "/end-donation/{id}")
     public DefaultResponseEnvelope<String> deleteDonation(@PathVariable Long id) {
         return new DefaultResponseEnvelope<>(
                 true,
@@ -125,7 +125,7 @@ public class DonationController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PostMapping(value = "/favorite-donation/", consumes = "application/json")
+    @PostMapping(value = "/favorite-donation", consumes = "application/json")
     public DefaultResponseEnvelope<String> favoriteDonation(@RequestBody FavoriteRequestDTO favorite){
         return new DefaultResponseEnvelope<>(
                 true,
@@ -139,7 +139,7 @@ public class DonationController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @DeleteMapping(value = "/unfavorite-donation/", consumes = "application/json")
+    @DeleteMapping(value = "/unfavorite-donation", consumes = "application/json")
     public DefaultResponseEnvelope<String> unfavoriteDonation(@RequestBody FavoriteRequestDTO favorite){
         return new DefaultResponseEnvelope<>(
                 true,

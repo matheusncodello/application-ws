@@ -30,7 +30,7 @@ spring:
         trace: false
         web-allow-others: false
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:tveste
     driverClasssName: org.h2.Driver
     username:  sa
     password:

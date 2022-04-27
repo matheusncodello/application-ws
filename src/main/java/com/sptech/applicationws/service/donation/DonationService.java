@@ -1,6 +1,7 @@
 package com.sptech.applicationws.service.donation;
 
 import com.sptech.applicationws.controllers.dto.request.DonationRequestDTO;
+import com.sptech.applicationws.controllers.dto.request.EditDonationRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.DonationResponseDTO;
 
@@ -18,7 +19,7 @@ public interface DonationService {
 
     List<DonationResponseDTO> getFavoriteDonation(Long ongId);
 
-    String editDonation(Long id, DonationRequestDTO donation);
+    String editDonation(Long id, EditDonationRequestDTO donation);
 
     String deleteDonation(Long id);
 
