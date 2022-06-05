@@ -20,6 +20,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -64,12 +65,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/donation/get-favorite-donation",
             "/donation/favorite-donation",
             "/donation/unfavorite-donation"
-    };
-
-    private static final String[] PERMITED_URLS = {
-            "http://localhost:3000",
-            "https://t-veste.vercel.app/",
-            "https://t-veste.vercel.app"
     };
 
     @Override
@@ -122,7 +117,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("https://t-veste.vercel.app"));
+        config.setAllowedOrigins(List.of("https://t-veste.vercel.app"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         source.registerCorsConfiguration("/**", config);
