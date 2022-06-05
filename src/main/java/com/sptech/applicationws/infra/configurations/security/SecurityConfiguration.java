@@ -66,6 +66,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/donation/unfavorite-donation"
     };
 
+    private static final String[] PERMITED_URLS = {
+            "http://localhost:3000",
+            "https://t-veste.vercel.app/",
+            "https://t-veste.vercel.app"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
@@ -116,7 +122,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        config.setAllowedOrigins(Arrays.asList("https://t-veste.vercel.app"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         source.registerCorsConfiguration("/**", config);
