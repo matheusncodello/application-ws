@@ -9,7 +9,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-    private static final String[] PERMITED_URLS = {"http://localhost:3000", "https://t-veste.vercel.app/"};
+    private static final String[] PERMITED_URLS = {
+            "http://localhost:3000",
+            "https://t-veste.vercel.app/",
+            "https://t-veste.vercel.app"
+    };
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
