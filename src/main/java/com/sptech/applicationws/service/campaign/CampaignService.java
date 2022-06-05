@@ -12,7 +12,7 @@ public interface CampaignService {
     String createCampaign(CampaignRequestDTO campaign);
 
     List<CampaignResponseDTO> getActiveCampaign();
-
+    List<CampaignResponseDTO> getPilha();
     List<CampaignResponseDTO> getOngCampaign(Long ongId);
 
     CampaignResponseDTO getSingleCampaign(Long campaignId);
@@ -26,4 +26,10 @@ public interface CampaignService {
     String favoriteCampaign(FavoriteRequestDTO favorite);
 
     String unfavoriteCampaign(FavoriteRequestDTO unfavorite);
+
+    Long countCampaignAccess(Long campaignId);
+
+    void getTxt();
+
+    Object[] getFila();
 }

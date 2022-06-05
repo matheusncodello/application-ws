@@ -21,6 +21,8 @@ public interface UserService extends UserDetailsService {
 
     String getPostHistory(Long userId);
 
+    String leArquivoTxt();
+
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }

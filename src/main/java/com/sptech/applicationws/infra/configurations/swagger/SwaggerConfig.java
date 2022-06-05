@@ -33,9 +33,9 @@ public class SwaggerConfig {
                 .version("1.0.0")
                 .contact(
                         new Contact(
-                                "Matheus Noschese Codello",
-                                "https://github.com/matheusncodello",
-                                "matheus.ncodello@gmail.com"
+                                "T-Veste",
+                                null,
+                                null
                         )
                 )
                 .build();

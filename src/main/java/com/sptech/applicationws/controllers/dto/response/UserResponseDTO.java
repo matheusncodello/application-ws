@@ -7,14 +7,16 @@ public class UserResponseDTO {
     private AddressResponseDTO fullAddress;
     private Long phoneNumber;
     private String email;
+    private Boolean ong;
 
-    public UserResponseDTO(Long id, String username, String document, AddressResponseDTO fullAddress, Long phoneNumber, String email) {
+    public UserResponseDTO(Long id, String username, String document, AddressResponseDTO fullAddress, Long phoneNumber, String email, Boolean ong) {
         this.id = id;
         this.username = username;
         this.document = document;
         this.fullAddress = fullAddress;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.ong = ong;
     }
 
     public Long getId() {
@@ -63,5 +65,13 @@ public class UserResponseDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getOng() {
+        return ong;
+    }
+
+    public void setOng(Boolean ong) {
+        this.ong = ong;
     }
 }

@@ -2,6 +2,10 @@ server:
   port: 8080
   servlet:
     context-path: /api
+    session:
+      cookie:
+        same-site: none
+        secure: true
 
 spring:
   application:
@@ -9,19 +13,19 @@ spring:
   profiles:
     active: default
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.SQLServerDialect
     show-sql: true
-#    generate-ddl: false
+    generate-ddl: false
     hibernate:
-#      ddl-auto: none
+      ddl-auto: none
       format_sql: true
-      dialect: org.hibernate.dialect.H2Dialect
+      dialect: org.hibernate.dialect.SQLServerDialect
       temp:
         use_jdbc_metadata_defaults: false
-#    properties:
-#      hibernate:
-#        hbm2ddl:
-#          auto: validate
+  #    properties:
+  #      hibernate:
+  #        hbm2ddl:
+  #          auto: validate
   h2:
     console:
       enabled: true
@@ -30,10 +34,10 @@ spring:
         trace: false
         web-allow-others: false
   datasource:
-    url: jdbc:h2:mem:tveste
-    driverClasssName: org.h2.Driver
-    username:  sa
-    password:
+    url: jdbc:sqlserver://tveste-db.database.windows.net;database=tveste-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: 'tveste-db'
+    password: '#grupo05'
   main:
     allow-bean-definition-overriding: true
   jackson:

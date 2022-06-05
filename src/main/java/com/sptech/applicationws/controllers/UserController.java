@@ -5,15 +5,12 @@ import com.sptech.applicationws.controllers.dto.request.LoginRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.PostAccessRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.UserRegisterRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
-import com.sptech.applicationws.domain.PostAccess;
 import com.sptech.applicationws.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/user")
@@ -87,6 +84,14 @@ public class UserController{
         return new DefaultResponseEnvelope<>(
                 true,
                 userService.getPostHistory(userId)
+        );
+    }
+
+    @GetMapping(value = "/register-user")
+    public DefaultResponseEnvelope<String> leArquivo(){
+        return new DefaultResponseEnvelope<>(
+                true,
+                userService.leArquivoTxt()
         );
     }
 }

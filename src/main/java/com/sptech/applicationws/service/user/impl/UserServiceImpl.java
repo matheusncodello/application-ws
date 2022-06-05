@@ -20,6 +20,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService{
                 user.getPhoneNumber(),
                 user.getEmail(),
                 passwordEncoder.encode(user.getPassword()),
-                user.isOng()
+                user.getOng()
         ));
 
         addressRepository.save(new Address(
@@ -116,7 +119,8 @@ public class UserServiceImpl implements UserService{
                                 fullAddress.get().getState()
                         ),
                         loggedUser.getPhoneNumber(),
-                        loggedUser.getEmail()
+                        loggedUser.getEmail(),
+                        loggedUser.isOng()
                 );
             }
         }
@@ -136,13 +140,11 @@ public class UserServiceImpl implements UserService{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dateFormatted = Timestamp.valueOf(sdf.format(new Date()));
 
-        postAccessRepository.save(
-                new PostAccess(
-                        postAccess.getFkUser(),
-                        postAccess.getFkDonation(),
-                        postAccess.getFkCampaign(),
-                        dateFormatted
-                )
+        postAccessRepository.savePostAccess(
+                postAccess.getFkUser(),
+                postAccess.getFkDonation(),
+                postAccess.getFkCampaign(),
+                dateFormatted
         );
 
         return "Registro efetuado com sucesso.";
@@ -177,6 +179,96 @@ public class UserServiceImpl implements UserService{
         }
 
         return "Relatório gerado com sucesso";
+    }
+
+    public String leArquivoTxt() {
+        BufferedReader entrada = null;
+        String registro, tipoRegistro;
+        String nome, email, senha, cnpj, tel, cep, rua, num, district, city, state, isOng;
+        int contaRegDadoLido = 0;
+        int qtdRegDadoGravado;
+
+        try {
+            entrada = new BufferedReader(new FileReader(String.valueOf("user.txt")));
+        }
+        catch (IOException erro) {
+            System.out.println("Erro na abertura do arquivo: " + erro);
+        }
+
+        try {
+            registro = entrada.readLine();
+
+            while (registro != null) {
+                tipoRegistro = registro.substring(0,2);
+                if (tipoRegistro.equals("00")) {
+                    System.out.println("É um registro de header");
+                    System.out.println("Tipo do arquivo: " +
+                            registro.substring(2,6));
+                    System.out.println("data: " +
+                            registro.substring(6,25));
+                    System.out.println("versao doc: " +
+                            registro.substring(25,27));
+
+                } else if (tipoRegistro.equals("01")) {
+                    System.out.println("É um registro de trailer");
+                    qtdRegDadoGravado= Integer.parseInt(registro.substring(2,7));
+                    if (contaRegDadoLido == qtdRegDadoGravado) {
+                        System.out.println("Quantidade de registros lidos compatível " +
+                                "com a quantidade de registros gravados");
+                    }
+                    else {
+                        System.out.println("Quantidade de registros lidos incompatível " +
+                                "com a quantidade de registros gravados");
+                    }
+
+                } else if (tipoRegistro.equals("02")) {
+                    System.out.println("É um registro de corpo");
+                    nome= registro.substring(2,14).trim();
+                    System.out.println(nome);
+                    cnpj= registro.substring(14,25).trim();
+                    System.out.println(cnpj);
+                    email= registro.substring(25,42).trim();
+                    System.out.println(email);
+                    senha= registro.substring(42,53).trim();
+                    System.out.println(senha);
+                    tel= registro.substring(53,64).trim();
+                    System.out.println(tel);
+                    cep= registro.substring(64,72).trim();
+                    System.out.println(cep);
+                    rua= registro.substring(72,84).trim();
+                    System.out.println(rua);
+                    num= registro.substring(84, 87).trim();
+                    System.out.println(num);
+                    district= registro.substring(87, 95).trim();
+                    System.out.println(district);
+                    city= registro.substring(95, 106).trim();
+                    System.out.println(city);
+                    state= registro.substring(106, 117).trim();
+                    System.out.println(state);
+                    isOng= registro.substring(117, 124).trim();
+                    System.out.println(isOng);
+                    contaRegDadoLido++;
+
+                    System.out.println(Boolean.valueOf(isOng));
+                    UserRegisterRequestDTO u = new UserRegisterRequestDTO(
+                            nome, cnpj, cep, rua, num, "", district, city, state, Long.valueOf(tel), email, senha, Boolean.parseBoolean(isOng
+                    ));
+
+                    register(u);
+                } else {
+                    System.out.println("Tipo de registro inválido");
+                }
+                // Le o proximo registro
+                registro = entrada.readLine();
+            }
+            entrada.close();
+
+            return "User cadastrado com sucesso";
+        }
+        catch (IOException erro) {
+            System.out.println("Erro ao ler arquivo: " + erro);
+        }
+        return "Sucesso";
     }
 
     @Override

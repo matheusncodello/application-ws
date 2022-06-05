@@ -30,7 +30,7 @@ public class Donation {
     private String donationDescription;
 
     @PastOrPresent
-    @Column(name = "donation_time")
+    @Column(name = "donation_created")
     private Timestamp donationTime;
 
     @NotBlank
