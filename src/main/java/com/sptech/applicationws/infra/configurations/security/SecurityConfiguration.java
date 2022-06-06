@@ -36,12 +36,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/user/register", "/user/login",
             "/user/get-post-history", "/h2-console/**",
             "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**",
-            "/campaign/register-user", "/campaign/get-campaign-txt"
+            "/campaign/register-user", "/campaign/get-campaign-txt",
+            "/donation/get-donation", "/campaign/get-campaign",
     };
 
     private static final String[] AUTH_URI = {
             "/user/logoff", "/user/register-post-access",
-            "/donation/get-donation", "/campaign/get-campaign",
             "/donation/get-single-donation", "/campaign/get-single-campaign",
             "/donation/get-user-donation", "/campaign/get-ong-campaign",
             "/donation/count-donation-access", "/campaign/count-campaign-access",
