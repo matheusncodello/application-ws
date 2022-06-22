@@ -2,8 +2,10 @@ package com.sptech.applicationws.infra.configurations.security;
 
 import com.sptech.applicationws.service.user.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,6 +14,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -24,20 +32,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserServiceImpl userService;
 
     private static final String[] PUBLIC_URI = {
-            "/user/**", "/h2-console/**",
-            "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"
+            "/user/register", "/user/login",
+            "/user/get-post-history", "/h2-console/**",
+            "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**",
+            "/campaign/register-user", "/campaign/get-campaign-txt"
     };
 
     private static final String[] AUTH_URI = {
+            "/user/logoff", "/user/register-post-access",
             "/donation/get-donation", "/campaign/get-campaign",
             "/donation/get-single-donation", "/campaign/get-single-campaign",
-            "/donation/get-user-donation", "/campaign/get-ong-campaign"
+            "/donation/get-user-donation", "/campaign/get-ong-campaign",
+            "/donation/count-donation-access", "/campaign/count-campaign-access"
     };
 
     private static final String[] USER_URI = {
             "/donation/create-donation",
-            "/donation/edit-donation/{id}",
-            "/donation/end-donation/{id}",
+            "/donation/edit-donation",
+            "/donation/end-donation",
             "/campaign/get-favorite-campaign",
             "/campaign/favorite-campaign",
             "/campaign/unfavorite-campaign"
@@ -45,8 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String[] ONG_URI = {
             "/campaign/create-campaign",
-            "/campaign/edit-campaign/{id}",
-            "/campaign/end-campaign/{id}",
+            "/campaign/edit-campaign",
+            "/campaign/end-campaign",
             "/donation/get-favorite-donation",
             "/donation/favorite-donation",
             "/donation/unfavorite-donation"
@@ -95,5 +107,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return new ForbiddenEntryPoint();
+    }
+
+    @Bean
+    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 }

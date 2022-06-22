@@ -2,7 +2,6 @@ package com.sptech.applicationws.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.PastOrPresent;
 import java.sql.Timestamp;
 
@@ -15,12 +14,10 @@ public class PostAccess {
     @Column(name = "fk_user", nullable = false)
     private Long fkUser;
 
-    @Null
-    @Column(name = "fk_donation", nullable = true)
+    @Column(name = "fk_donation")
     private Long fkDonation = null;
 
-    @Null
-    @Column(name = "fk_campaign", nullable = true)
+    @Column(name = "fk_campaign")
     private Long fkCampaign = null;
 
     @PastOrPresent

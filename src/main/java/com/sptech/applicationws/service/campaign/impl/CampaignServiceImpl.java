@@ -9,10 +9,7 @@ import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
 import com.sptech.applicationws.domain.*;
 import com.sptech.applicationws.domain.helpers.FavoriteCampaignId;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.database.AddressRepository;
-import com.sptech.applicationws.infra.database.CampaignRepository;
-import com.sptech.applicationws.infra.database.FavoriteCampaignRepository;
-import com.sptech.applicationws.infra.database.UserRepository;
+import com.sptech.applicationws.infra.database.*;
 import com.sptech.applicationws.service.campaign.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +36,9 @@ public class CampaignServiceImpl implements CampaignService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private PostAccessRepository postAccessRepository;
+
     @Override
     public String createCampaign(CampaignRequestDTO campaign) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -61,6 +61,7 @@ public class CampaignServiceImpl implements CampaignService {
         List<Campaign> campaignList = campaignRepository.findAll();
         List<CampaignResponseDTO> result = new ArrayList<>();
 
+
         for (Campaign c : campaignList) {
             if (c.getActive()) {
                 CampaignResponseDTO campaignResponse = new CampaignResponseDTO(
@@ -69,7 +70,9 @@ public class CampaignServiceImpl implements CampaignService {
                         c.getCampaignName(),
                         c.getCampaignDescription(),
                         c.getCampaignType(),
-                        c.getCampaignImage()
+                        c.getCampaignTime().toString(),
+                        c.getCampaignImage(),
+                        c.getActive()
                 );
 
                 result.add(campaignResponse);
@@ -84,14 +87,16 @@ public class CampaignServiceImpl implements CampaignService {
         List<Campaign> campaignList = campaignRepository.findByFkOng(ongId);
         List<CampaignResponseDTO> result = new ArrayList<>();
 
-        for (Campaign d : campaignList) {
+        for (Campaign c : campaignList) {
             CampaignResponseDTO campaignResponse = new CampaignResponseDTO(
-                    d.getCampaignId(),
-                    toResponseDTO(d.getFkOng()),
-                    d.getCampaignName(),
-                    d.getCampaignDescription(),
-                    d.getCampaignType(),
-                    d.getCampaignImage()
+                    c.getCampaignId(),
+                    toResponseDTO(c.getFkOng()),
+                    c.getCampaignName(),
+                    c.getCampaignDescription(),
+                    c.getCampaignType(),
+                    c.getCampaignTime().toString(),
+                    c.getCampaignImage(),
+                    c.getActive()
             );
 
             result.add(campaignResponse);
@@ -113,7 +118,9 @@ public class CampaignServiceImpl implements CampaignService {
                     c.getCampaignName(),
                     c.getCampaignDescription(),
                     c.getCampaignType(),
-                    c.getCampaignImage()
+                    c.getCampaignTime().toString(),
+                    c.getCampaignImage(),
+                    c.getActive()
             );
         }
 
@@ -130,14 +137,16 @@ public class CampaignServiceImpl implements CampaignService {
         List<Campaign> favoriteCampaigns = campaignRepository.getFavoriteCampaign(userId);
         List<CampaignResponseDTO> result = new ArrayList<>();
 
-        for(Campaign d : favoriteCampaigns){
+        for (Campaign c : favoriteCampaigns) {
             CampaignResponseDTO campaignResponse = new CampaignResponseDTO(
-                    d.getCampaignId(),
-                    toResponseDTO(d.getFkOng()),
-                    d.getCampaignName(),
-                    d.getCampaignDescription(),
-                    d.getCampaignType(),
-                    d.getCampaignImage()
+                    c.getCampaignId(),
+                    toResponseDTO(c.getFkOng()),
+                    c.getCampaignName(),
+                    c.getCampaignDescription(),
+                    c.getCampaignType(),
+                    c.getCampaignTime().toString(),
+                    c.getCampaignImage(),
+                    c.getActive()
             );
 
             result.add(campaignResponse);
@@ -163,7 +172,7 @@ public class CampaignServiceImpl implements CampaignService {
             return "Campanha atualizada com sucesso .";
         }
 
-        return "A campanha que você quer editar não foi encontrada.";
+        throw new NotFoundException("A campanha que você quer editar não foi encontrada.");
     }
 
     @Override
@@ -179,7 +188,7 @@ public class CampaignServiceImpl implements CampaignService {
             return "Campanha encerrada com sucesso.";
         }
 
-        return "A campanha que você quer encerrar não foi encontrada.";
+        throw new NotFoundException("A campanha que você quer encerrar não foi encontrada.");
     }
 
     @Override
@@ -187,7 +196,7 @@ public class CampaignServiceImpl implements CampaignService {
         Optional<User> foundUser = userRepository.findById(favorite.getUserId());
         Optional<Campaign> foundCampaign = campaignRepository.findById(favorite.getPostId());
 
-        if (foundUser.isPresent() && foundCampaign.isPresent()){
+        if (foundUser.isPresent() && foundCampaign.isPresent()) {
             favoriteCampaignRepository.save(
                     new FavoriteCampaign(
                             new FavoriteCampaignId(
@@ -209,16 +218,40 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public String unfavoriteCampaign(FavoriteRequestDTO unfavorite) {
-        favoriteCampaignRepository.delete(
-                new FavoriteCampaign(
-                        new FavoriteCampaignId(
-                                unfavorite.getUserId(),
-                                unfavorite.getPostId()
-                        )
-                )
-        );
+        Optional<User> foundUser = userRepository.findById(unfavorite.getUserId());
+        Optional<Campaign> foundCampaign = campaignRepository.findById(unfavorite.getPostId());
+
+        if (foundUser.isPresent() && foundCampaign.isPresent()) {
+            favoriteCampaignRepository.delete(
+                    new FavoriteCampaign(
+                            new FavoriteCampaignId(
+                                    unfavorite.getUserId(),
+                                    unfavorite.getPostId()
+                            )
+                    )
+            );
+
+            return "Doação favoritada com sucesso.";
+        } else if (foundUser.isPresent()) {
+            throw new NotFoundException("O ID da campanha não foi encontrada.");
+        } else if (foundCampaign.isPresent()) {
+            throw new NotFoundException("O ID do usuário não foi encontrado.");
+        }
 
         return "Campanha desfavoritada com sucesso.";
+    }
+
+    @Override
+    public Long countCampaignAccess(Long campaignId) {
+        Optional<Campaign> foundCampaign = campaignRepository.findById(campaignId);
+
+        if (foundCampaign.isPresent()) {
+            Long postAccess = postAccessRepository.countByFkCampaign(campaignId);
+
+            return postAccess;
+        }
+
+        throw new NotFoundException("O ID não foi encontrado.");
     }
 
     private UserResponseDTO toResponseDTO(Long fkOng) {
@@ -238,7 +271,8 @@ public class CampaignServiceImpl implements CampaignService {
                         fullAddress.get().getState()
                 ),
                 ong.getPhoneNumber(),
-                ong.getEmail()
+                ong.getEmail(),
+                ong.isOng()
         );
     }
 }

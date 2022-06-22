@@ -26,4 +26,6 @@ public interface CampaignService {
     String favoriteCampaign(FavoriteRequestDTO favorite);
 
     String unfavoriteCampaign(FavoriteRequestDTO unfavorite);
+
+    Long countCampaignAccess(Long campaignId);
 }

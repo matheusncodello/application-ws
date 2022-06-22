@@ -6,15 +6,19 @@ public class DonationResponseDTO {
     private String donationName;
     private String donationDescription;
     private String donationType;
+    private String donationCreated;
     private String donationImage;
+    private Boolean isActive;
 
-    public DonationResponseDTO(Long donationId, UserResponseDTO userActive, String donationName, String donationDescription, String donationType, String donationImage) {
+    public DonationResponseDTO(Long donationId, UserResponseDTO userActive, String donationName, String donationDescription, String donationType, String donationCreated, String donationImage, Boolean isActive) {
         this.donationId = donationId;
         this.userActive = userActive;
         this.donationName = donationName;
         this.donationDescription = donationDescription;
         this.donationType = donationType;
+        this.donationCreated = donationCreated;
         this.donationImage = donationImage;
+        this.isActive = isActive;
     }
 
     public DonationResponseDTO() {
@@ -60,11 +64,27 @@ public class DonationResponseDTO {
         this.donationType = donationType;
     }
 
+    public String getDonationCreated() {
+        return donationCreated;
+    }
+
+    public void setDonationCreated(String donationCreated) {
+        this.donationCreated = donationCreated;
+    }
+
     public String getDonationImage() {
         return donationImage;
     }
 
     public void setDonationImage(String donationImage) {
         this.donationImage = donationImage;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }

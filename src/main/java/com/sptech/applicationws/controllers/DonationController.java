@@ -84,7 +84,7 @@ public class DonationController {
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
     @GetMapping(value = "/get-favorite-donation/{ongId}", produces = "application/json")
-    public DefaultResponseEnvelope<List<DonationResponseDTO>> getFavoriteCampaign(@PathVariable Long ongId) {
+    public DefaultResponseEnvelope<List<DonationResponseDTO>> getFavoriteDonation(@PathVariable Long ongId) {
         return new DefaultResponseEnvelope<>(
                 true,
                 donationService.getFavoriteDonation(ongId)
@@ -97,7 +97,7 @@ public class DonationController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/edit-donation/{id}", consumes = "application/json")
+    @PostMapping(value = "/edit-donation/{id}", consumes = "application/json")
     public DefaultResponseEnvelope<String> editDonation(@PathVariable Long id, @RequestBody EditDonationRequestDTO donation) {
         return new DefaultResponseEnvelope<>(
                 true,
@@ -111,7 +111,7 @@ public class DonationController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/end-donation/{id}")
+    @PostMapping(value = "/end-donation/{id}")
     public DefaultResponseEnvelope<String> deleteDonation(@PathVariable Long id) {
         return new DefaultResponseEnvelope<>(
                 true,
@@ -126,7 +126,7 @@ public class DonationController {
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
     @PostMapping(value = "/favorite-donation", consumes = "application/json")
-    public DefaultResponseEnvelope<String> favoriteDonation(@RequestBody FavoriteRequestDTO favorite){
+    public DefaultResponseEnvelope<String> favoriteDonation(@RequestBody FavoriteRequestDTO favorite) {
         return new DefaultResponseEnvelope<>(
                 true,
                 donationService.favoriteDonation(favorite)
@@ -140,10 +140,24 @@ public class DonationController {
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
     @DeleteMapping(value = "/unfavorite-donation", consumes = "application/json")
-    public DefaultResponseEnvelope<String> unfavoriteDonation(@RequestBody FavoriteRequestDTO favorite){
+    public DefaultResponseEnvelope<String> unfavoriteDonation(@RequestBody FavoriteRequestDTO favorite) {
         return new DefaultResponseEnvelope<>(
                 true,
                 donationService.unfavoriteDonation(favorite)
+        );
+    }
+
+    @ApiOperation(value = "Conta quantos acessos a doação possui.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Realiza o método com sucesso."),
+            @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
+            @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
+    })
+    @GetMapping(value = "/count-donation-access/{donationId}")
+    public DefaultResponseEnvelope<String> countDonationAccess(@PathVariable Long donationId) {
+        return new DefaultResponseEnvelope<>(
+                true,
+                donationService.countDonationAccess(donationId)
         );
     }
 }

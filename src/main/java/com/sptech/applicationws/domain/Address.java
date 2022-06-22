@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "tb_address")
+@Table(name = "tb_user_address")
 public class Address{
     @NotNull
     @Id
@@ -13,30 +13,30 @@ public class Address{
     private Long fkUser;
 
     @NotBlank
-    @Column(name = "address_cep")
+    @Column(name = "user_cep")
     private String cep;
 
     @NotBlank
-    @Column(name = "address_street")
+    @Column(name = "user_street")
     private String street;
 
     @NotBlank
-    @Column(name = "address_street_number")
+    @Column(name = "user_street_number")
     private String streetNumber;
 
-    @Column(name = "address_street_complement")
+    @Column(name = "user_street_complement")
     private String streetComplement;
 
     @NotBlank
-    @Column(name = "address_district")
+    @Column(name = "user_district")
     private String district;
 
     @NotBlank
-    @Column(name = "address_city")
+    @Column(name = "user_city")
     private String city;
 
     @NotBlank
-    @Column(name = "address_state")
+    @Column(name = "user_state")
     private String state;
 
     public Address(Long fkUser, String cep, String street, String streetNumber, String streetComplement, String district, String city, String state) {

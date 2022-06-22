@@ -13,9 +13,9 @@ public class UserRegisterRequestDTO {
     private Long phoneNumber;
     private String email;
     private String password;
-    private boolean isOng;
+    private boolean ong;
 
-    public UserRegisterRequestDTO(String username, String document, String cep, String street, String streetNumber, String streetComplement, String district, String city, String state, Long phoneNumber, String email, String password, boolean isOng) {
+    public UserRegisterRequestDTO(String username, String document, String cep, String street, String streetNumber, String streetComplement, String district, String city, String state, Long phoneNumber, String email, String password, boolean ong) {
         this.username = username;
         this.document = document;
         this.cep = cep;
@@ -28,7 +28,10 @@ public class UserRegisterRequestDTO {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
-        this.isOng = isOng;
+        this.ong = ong;
+    }
+
+    public UserRegisterRequestDTO() {
     }
 
     public String getUsername() {
@@ -127,11 +130,11 @@ public class UserRegisterRequestDTO {
         this.password = password;
     }
 
-    public boolean isOng() {
-        return isOng;
+    public boolean getOng() {
+        return ong;
     }
 
     public void setOng(boolean ong) {
-        isOng = ong;
+        this.ong = ong;
     }
 }

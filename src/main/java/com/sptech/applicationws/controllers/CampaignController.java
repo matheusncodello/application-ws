@@ -43,6 +43,7 @@ public class CampaignController {
     })
     @GetMapping(value = "/get-campaign", produces = "application/json")
     public DefaultResponseEnvelope<List<CampaignResponseDTO>> getActiveCampaign() {
+
         return new DefaultResponseEnvelope<>(
                 true,
                 campaignService.getActiveCampaign()
@@ -97,7 +98,7 @@ public class CampaignController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/edit-campaign/{id}", consumes = "application/json")
+    @PostMapping(value = "/edit-campaign/{id}", consumes = "application/json")
     public DefaultResponseEnvelope<String> editCampaign(@PathVariable Long id, @RequestBody EditCampaignRequestDTO campaign) {
         return new DefaultResponseEnvelope<>(
                 true,
@@ -111,13 +112,14 @@ public class CampaignController {
             @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
             @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
     })
-    @PutMapping(value = "/end-campaign/{id}")
+    @PostMapping(value = "/end-campaign/{id}")
     public DefaultResponseEnvelope<String> deleteCampaign(@PathVariable Long id) {
         return new DefaultResponseEnvelope<>(
                 true,
                 campaignService.deleteCampaign(id)
         );
     }
+
 
     @ApiOperation(value = "Favorita a campanha escolhida")
     @ApiResponses(value = {
@@ -144,6 +146,20 @@ public class CampaignController {
         return new DefaultResponseEnvelope<>(
                 true,
                 campaignService.unfavoriteCampaign(favorite)
+        );
+    }
+
+    @ApiOperation(value = "Conta quantos acessos a campanha possui.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Realiza o método com sucesso."),
+            @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso."),
+            @ApiResponse(code = 400, message = "Foi gerado um erro/exceção"),
+    })
+    @GetMapping(value = "/count-campaign-access/{campaignId}")
+    public DefaultResponseEnvelope<Long> countCampaignAccess(@PathVariable Long campaignId){
+        return new DefaultResponseEnvelope<>(
+                true,
+                campaignService.countCampaignAccess(campaignId)
         );
     }
 }

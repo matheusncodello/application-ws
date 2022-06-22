@@ -6,15 +6,19 @@ public class CampaignResponseDTO {
     private String campaignName;
     private String campaignDescription;
     private String campaignType;
+    private String campaignCreated;
     private String campaignImage;
+    private Boolean isActive;
 
-    public CampaignResponseDTO(Long campaignId, UserResponseDTO ongActive, String campaignName, String campaignDescription, String campaignType, String campaignImage) {
+    public CampaignResponseDTO(Long campaignId, UserResponseDTO ongActive, String campaignName, String campaignDescription, String campaignType, String campaignCreated, String campaignImage, Boolean isActive) {
         this.campaignId = campaignId;
         this.ongActive = ongActive;
         this.campaignName = campaignName;
         this.campaignDescription = campaignDescription;
         this.campaignType = campaignType;
+        this.campaignCreated = campaignCreated;
         this.campaignImage = campaignImage;
+        this.isActive = isActive;
     }
 
     public CampaignResponseDTO() {
@@ -60,11 +64,27 @@ public class CampaignResponseDTO {
         this.campaignType = campaignType;
     }
 
+    public String getCampaignCreated() {
+        return campaignCreated;
+    }
+
+    public void setCampaignCreated(String campaignCreated) {
+        this.campaignCreated = campaignCreated;
+    }
+
     public String getCampaignImage() {
         return campaignImage;
     }
 
     public void setCampaignImage(String campaignImage) {
         this.campaignImage = campaignImage;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }

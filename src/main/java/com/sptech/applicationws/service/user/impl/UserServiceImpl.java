@@ -8,8 +8,6 @@ import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
 import com.sptech.applicationws.domain.*;
 import com.sptech.applicationws.infra.configurations.exception.UserExistsException;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.configurations.mapper.CsvMapper;
-import com.sptech.applicationws.infra.configurations.mapper.ListObj;
 import com.sptech.applicationws.infra.database.*;
 import com.sptech.applicationws.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,9 +44,6 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CsvMapper csvMapper;
-
     @Override
     public String register(UserRegisterRequestDTO user) {
         if (userRepository.findByEmail(user.getEmail()) != null || userRepository.findByDocument(user.getDocument()) != null) {
@@ -62,7 +56,7 @@ public class UserServiceImpl implements UserService{
                 user.getPhoneNumber(),
                 user.getEmail(),
                 passwordEncoder.encode(user.getPassword()),
-                user.isOng()
+                user.getOng()
         ));
 
         addressRepository.save(new Address(
@@ -116,7 +110,8 @@ public class UserServiceImpl implements UserService{
                                 fullAddress.get().getState()
                         ),
                         loggedUser.getPhoneNumber(),
-                        loggedUser.getEmail()
+                        loggedUser.getEmail(),
+                        loggedUser.isOng()
                 );
             }
         }
@@ -136,47 +131,14 @@ public class UserServiceImpl implements UserService{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dateFormatted = Timestamp.valueOf(sdf.format(new Date()));
 
-        postAccessRepository.save(
-                new PostAccess(
-                        postAccess.getFkUser(),
-                        postAccess.getFkDonation(),
-                        postAccess.getFkCampaign(),
-                        dateFormatted
-                )
+        postAccessRepository.savePostAccess(
+                postAccess.getFkUser(),
+                postAccess.getFkDonation(),
+                postAccess.getFkCampaign(),
+                dateFormatted
         );
 
         return "Registro efetuado com sucesso.";
-    }
-
-    @Override
-    public String getPostHistory(Long userId) {
-        Optional<User> userFound = userRepository.findById(userId);
-
-        if (userFound.isPresent()) {
-            if (userFound.get().isOng()) {
-                List<Campaign> listCampaigns = campaignRepository.findByFkOng(userId);
-                ListObj<Campaign> listObj = new ListObj<>(listCampaigns.size());
-
-                for (Campaign c: listCampaigns){
-                    listObj.toAdd(c);
-                }
-
-                csvMapper.writeCampaignCsv(listObj, "campaigns");
-            } else {
-                List<Donation> listDonations = donationRepository.findByFkUser(userId);
-                ListObj<Donation> listObj = new ListObj<>(listDonations.size());
-
-                for (Donation d: listDonations){
-                    listObj.toAdd(d);
-                }
-
-                csvMapper.writeDonationCsv(listObj, "donations");
-            }
-        } else {
-            throw new NotFoundException("O usuário não foi encontrado.");
-        }
-
-        return "Relatório gerado com sucesso";
     }
 
     @Override
