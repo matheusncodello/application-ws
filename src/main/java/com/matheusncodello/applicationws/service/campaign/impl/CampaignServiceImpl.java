@@ -11,10 +11,8 @@ import com.matheusncodello.applicationws.controllers.dto.response.AddressRespons
 import com.matheusncodello.applicationws.controllers.dto.response.CampaignResponseDTO;
 import com.matheusncodello.applicationws.controllers.dto.response.UserResponseDTO;
 import com.matheusncodello.applicationws.infra.database.*;
-import com.sptech.applicationws.domain.*;
 import com.matheusncodello.applicationws.domain.helpers.FavoriteCampaignId;
 import com.matheusncodello.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.database.*;
 import com.matheusncodello.applicationws.service.campaign.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -8,10 +8,8 @@ import com.matheusncodello.applicationws.controllers.dto.response.UserResponseDT
 import com.matheusncodello.applicationws.domain.Address;
 import com.matheusncodello.applicationws.domain.User;
 import com.matheusncodello.applicationws.infra.database.*;
-import com.sptech.applicationws.domain.*;
 import com.matheusncodello.applicationws.infra.configurations.exception.UserExistsException;
 import com.matheusncodello.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.database.*;
 import com.matheusncodello.applicationws.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
