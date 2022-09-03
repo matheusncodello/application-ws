@@ -3,23 +3,19 @@ package com.sptech.applicationws.service.campaign.impl;
 import com.sptech.applicationws.controllers.dto.request.CampaignRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.EditCampaignRequestDTO;
 import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
-import com.sptech.applicationws.controllers.dto.request.UserRegisterRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.AddressResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.CampaignResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.CampaignResponseTxtDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
 import com.sptech.applicationws.domain.*;
-import com.sptech.applicationws.domain.enums.Types;
 import com.sptech.applicationws.domain.helpers.FavoriteCampaignId;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.configurations.mapper.FilaObj;
-import com.sptech.applicationws.infra.configurations.mapper.PilhaObj;
+import com.sptech.applicationws.infra.configurations.utils.FilaObj;
+import com.sptech.applicationws.infra.configurations.utils.PilhaObj;
 import com.sptech.applicationws.infra.database.*;
 import com.sptech.applicationws.service.campaign.CampaignService;
-import com.sptech.applicationws.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.sql.Timestamp;
@@ -36,16 +32,12 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Autowired
     private CampaignRepository campaignRepository;
-
     @Autowired
     private FavoriteCampaignRepository favoriteCampaignRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private PostAccessRepository postAccessRepository;
 

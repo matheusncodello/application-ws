@@ -1,4 +1,4 @@
-package com.sptech.applicationws.infra.configurations.mapper;
+package com.sptech.applicationws.infra.configurations.utils;
 
 public class FilaObj<T> {
 

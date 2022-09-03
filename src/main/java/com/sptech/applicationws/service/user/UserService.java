@@ -19,10 +19,6 @@ public interface UserService extends UserDetailsService {
 
     String registerPostAccess(PostAccessRequestDTO postAccess);
 
-    String getPostHistory(Long userId);
-
-    String leArquivoTxt();
-
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }

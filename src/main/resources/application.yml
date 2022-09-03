@@ -13,19 +13,19 @@ spring:
   profiles:
     active: default
   jpa:
-    database-platform: org.hibernate.dialect.SQLServerDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     generate-ddl: false
     hibernate:
       ddl-auto: none
       format_sql: true
-      dialect: org.hibernate.dialect.SQLServerDialect
+      dialect: org.hibernate.dialect.PostgreSQLDialect
       temp:
         use_jdbc_metadata_defaults: false
-  #    properties:
-  #      hibernate:
-  #        hbm2ddl:
-  #          auto: validate
+      properties:
+        hibernate:
+          hbm2ddl:
+            auto: validate
   h2:
     console:
       enabled: true
@@ -34,10 +34,10 @@ spring:
         trace: false
         web-allow-others: false
   datasource:
-    url: jdbc:sqlserver://tveste-db.database.windows.net;database=tveste-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: 'tveste-db'
-    password: '#grupo05'
+    url: jdbc:postgresql://tveste-db.cbiuawxnssk1.us-east-1.rds.amazonaws.com:5432/tveste
+    driverClassName: org.postgresql.Driver
+    username: 'tveste'
+    password: 'tveste#admin'
   main:
     allow-bean-definition-overriding: true
   jackson:

@@ -10,8 +10,8 @@ import com.sptech.applicationws.domain.*;
 import com.sptech.applicationws.domain.Donation;
 import com.sptech.applicationws.domain.helpers.FavoriteDonationId;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
-import com.sptech.applicationws.infra.configurations.mapper.FilaObj;
-import com.sptech.applicationws.infra.configurations.mapper.PilhaObj;
+import com.sptech.applicationws.infra.configurations.utils.FilaObj;
+import com.sptech.applicationws.infra.configurations.utils.PilhaObj;
 import com.sptech.applicationws.infra.database.*;
 import com.sptech.applicationws.service.donation.DonationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +29,12 @@ public class DonationServiceImpl implements DonationService {
 
     @Autowired
     private DonationRepository donationRepository;
-
     @Autowired
     private FavoriteDonationRepository favoriteDonationRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private PostAccessRepository postAccessRepository;
 
