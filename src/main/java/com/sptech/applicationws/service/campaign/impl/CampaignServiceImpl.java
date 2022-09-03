@@ -119,69 +119,6 @@ public class CampaignServiceImpl implements CampaignService {
         return result2;
     }
 
-    public void getTxt() {
-        List<Campaign> campaignList = campaignRepository.findAll();
-
-        String header = "00CAMPANHA";
-        header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        header += "01";
-        // Grava o registro de header
-        gravaRegistro(header, "allcampaigns.txt");
-
-        String corpo;
-        int contaRegistroCorpo = 0;
-
-        for (Campaign c : campaignList) {
-            if (c.getActive()) {
-                CampaignResponseTxtDTO campaignResponse = new CampaignResponseTxtDTO(
-                        toResponseDTO(c.getFkOng()),
-                        c.getCampaignName(),
-                        c.getCampaignDescription(),
-                        c.getCampaignTime().toString(),
-                        countCampaignAccess(c.getCampaignId())
-                );
-
-                corpo = "02";
-                corpo += String.format("%-50.100s", campaignResponse.getCampaignName());
-                corpo += String.format("%-50.300s", campaignResponse.getCampaignDescription());
-                corpo += String.format("%-19.19s", campaignResponse.getCampaignCreated());
-                corpo += String.format("%03d", campaignResponse.getAccessCount());
-                corpo += String.format("%-50.100s", campaignResponse.getOngActive().getUsername());
-                corpo += String.format("%011d", campaignResponse.getOngActive().getPhoneNumber());
-                corpo += String.format("%-50.100s", campaignResponse.getOngActive().getEmail());
-                corpo += String.format("%-50.100s", campaignResponse.getOngActive().getFullAddress().getStreet());
-                corpo += String.format("%-50.100s", campaignResponse.getOngActive().getFullAddress().getState());
-                gravaRegistro(corpo, "allcampaigns.txt");
-                contaRegistroCorpo++;
-
-            }
-
-        }
-
-        String trailer = "01";
-        trailer += String.format("%05d", contaRegistroCorpo);
-        gravaRegistro(trailer, "allcampaigns.txt");
-
-
-    }
-
-    public static void gravaRegistro(String registro, String nomeArq) {
-        BufferedWriter saida = null;
-
-        try {
-            saida = new BufferedWriter(new FileWriter(nomeArq, true));
-        } catch (IOException erro) {
-            System.out.println("Erro na abertura do arquivo: " + erro);
-        }
-
-        try {
-            saida.append(registro + "\n");
-            saida.close();
-        } catch (IOException erro) {
-            System.out.println("Erro na gravação do arquivo: " + erro);
-        }
-    }
-
     @Override
     public Object[] getFila() {
         List<CampaignResponseDTO> response = getActiveCampaign();

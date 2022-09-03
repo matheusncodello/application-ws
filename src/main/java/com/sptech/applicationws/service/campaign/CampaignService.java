@@ -29,7 +29,5 @@ public interface CampaignService {
 
     Long countCampaignAccess(Long campaignId);
 
-    void getTxt();
-
     Object[] getFila();
 }

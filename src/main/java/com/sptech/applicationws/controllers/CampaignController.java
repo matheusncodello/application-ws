@@ -190,10 +190,4 @@ public class CampaignController {
                 campaignService.getFila()
         );
     }
-
-    @GetMapping(value = "/get-campaign-txt")
-    public void getTxtCampaings(){
-        campaignService.getTxt();
-    }
-  
 }
