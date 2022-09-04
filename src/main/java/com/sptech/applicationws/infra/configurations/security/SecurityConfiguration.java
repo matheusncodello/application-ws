@@ -34,9 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String[] PUBLIC_URI = {
             "/user/register", "/user/login",
-            "/user/get-post-history", "/h2-console/**",
+            "/h2-console/**",
             "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**",
-            "/campaign/register-user", "/campaign/get-campaign-txt",
             "/donation/get-donation", "/campaign/get-campaign",
     };
 
@@ -78,16 +77,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(PUBLIC_URI)
-                    .permitAll()
-                .antMatchers(AUTH_URI)
-                    .hasAnyRole("ONG", "USER")
-                .antMatchers(ONG_URI)
-                    .hasRole("ONG")
-                .antMatchers(USER_URI)
-                    .hasRole("USER")
                 .anyRequest()
-                    .authenticated()
+                    .permitAll()
+                // .antMatchers(PUBLIC_URI)
+                //     .permitAll()
+                // .antMatchers(AUTH_URI)
+                //     .hasAnyRole("ONG", "USER")
+                // .antMatchers(ONG_URI)
+                //     .hasRole("ONG")
+                // .antMatchers(USER_URI)
+                //     .hasRole("USER")
+                // .anyRequest()
+                //     .authenticated()
                 .and()
                 .exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())
