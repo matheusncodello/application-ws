@@ -3,10 +3,10 @@ server:
   port: 8080
   servlet:
     context-path: /api
-    session:
-      cookie:
-        same-site: none
-        secure: true
+    # session:
+      # cookie:
+        # same-site: none
+        # secure: true
 
 spring:
   application:
