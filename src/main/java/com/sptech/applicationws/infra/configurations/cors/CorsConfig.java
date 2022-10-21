@@ -12,9 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     private static final String[] PERMITED_URLS = {
             "http://localhost:3000",
             "https://t-veste.vercel.app/",
-            "https://t-veste.vercel.app",
-            "http://44.196.96.99:3000",
-            "http://ec2-44-196-96-99.compute-1.amazonaws.com:3000"
+            "https://tveste.ddns.net"
     };
 
     @Override

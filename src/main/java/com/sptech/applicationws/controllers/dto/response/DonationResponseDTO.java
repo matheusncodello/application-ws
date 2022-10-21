@@ -1,7 +1,5 @@
 package com.sptech.applicationws.controllers.dto.response;
 
-import java.sql.Timestamp;
-
 public class DonationResponseDTO {
     private Long donationId;
     private UserResponseDTO userActive;

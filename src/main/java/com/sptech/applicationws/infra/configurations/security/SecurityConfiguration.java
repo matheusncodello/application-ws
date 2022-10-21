@@ -2,10 +2,8 @@ package com.sptech.applicationws.infra.configurations.security;
 
 import com.sptech.applicationws.service.user.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,13 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -79,16 +70,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest()
                     .permitAll()
-                // .antMatchers(PUBLIC_URI)
-                //     .permitAll()
-                // .antMatchers(AUTH_URI)
-                //     .hasAnyRole("ONG", "USER")
-                // .antMatchers(ONG_URI)
-                //     .hasRole("ONG")
-                // .antMatchers(USER_URI)
-                //     .hasRole("USER")
-                // .anyRequest()
-                //     .authenticated()
+                .antMatchers(PUBLIC_URI)
+                    .permitAll()
+                .antMatchers(AUTH_URI)
+                    .hasAnyRole("ONG", "USER")
+                .antMatchers(ONG_URI)
+                    .hasRole("ONG")
+                .antMatchers(USER_URI)
+                    .hasRole("USER")
+                .anyRequest()
+                    .authenticated()
                 .and()
                 .exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())

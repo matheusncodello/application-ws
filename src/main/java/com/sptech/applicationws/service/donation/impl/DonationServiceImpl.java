@@ -6,8 +6,10 @@ import com.sptech.applicationws.controllers.dto.request.FavoriteRequestDTO;
 import com.sptech.applicationws.controllers.dto.response.AddressResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.DonationResponseDTO;
 import com.sptech.applicationws.controllers.dto.response.UserResponseDTO;
-import com.sptech.applicationws.domain.*;
+import com.sptech.applicationws.domain.Address;
 import com.sptech.applicationws.domain.Donation;
+import com.sptech.applicationws.domain.FavoriteDonation;
+import com.sptech.applicationws.domain.User;
 import com.sptech.applicationws.domain.helpers.FavoriteDonationId;
 import com.sptech.applicationws.infra.configurations.exception.NotFoundException;
 import com.sptech.applicationws.infra.configurations.utils.FilaObj;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DonationServiceImpl implements DonationService {
@@ -58,89 +61,39 @@ public class DonationServiceImpl implements DonationService {
     @Override
     public List<DonationResponseDTO> getActiveDonation() {
         List<Donation> donationList = donationRepository.findAll();
-        List<DonationResponseDTO> result = new ArrayList<>();
 
-        for (Donation d : donationList) {
-            if (d.getActive()) {
-                DonationResponseDTO donationResponse = new DonationResponseDTO(
-                        d.getDonationId(),
-                        toResponseDTO(d.getFkUser()),
-                        d.getDonationName(),
-                        d.getDonationDescription(),
-                        d.getDonationType(),
-                        d.getDonationTime().toString(),
-                        d.getDonationImage(),
-                        d.getActive()
-                );
-
-                result.add(donationResponse);
-            }
-        }
-
-        return result;
+        return donationList.stream().filter(Donation::getActive).map(this::toDonationResponseDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<DonationResponseDTO> getUserDonation(Long userId) {
         List<Donation> donationList = donationRepository.findByFkUser(userId);
-        List<DonationResponseDTO> result = new ArrayList<>();
 
-        for (Donation d : donationList) {
-            DonationResponseDTO donationResponse = new DonationResponseDTO(
-                    d.getDonationId(),
-                    toResponseDTO(d.getFkUser()),
-                    d.getDonationName(),
-                    d.getDonationDescription(),
-                    d.getDonationType(),
-                    d.getDonationTime().toString(),
-                    d.getDonationImage(),
-                    d.getActive()
-            );
-
-            result.add(donationResponse);
-        }
-
-        return result;
+        return donationList.stream().map(this::toDonationResponseDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<DonationResponseDTO> getPilha() {
         List<Donation> donationList = donationRepository.findAll();
         PilhaObj<DonationResponseDTO> pilha = new PilhaObj<>(donationList.size());
-        List<DonationResponseDTO> result2 = new ArrayList<>();
+        List<DonationResponseDTO> result = new ArrayList<>();
 
-        for (Donation d : donationList) {
-            if (d.getActive()) {
-                DonationResponseDTO donationResponse = new DonationResponseDTO(
-                        d.getDonationId(),
-                        toResponseDTO(d.getFkUser()),
-                        d.getDonationName(),
-                        d.getDonationDescription(),
-                        d.getDonationType(),
-                        d.getDonationTime().toString(),
-                        d.getDonationImage(),
-                        d.getActive()
-                );
+        donationList.stream().filter(Donation::getActive).map(this::toDonationResponseDTO).forEach(
+                it -> {
+                    pilha.push(it);
+                    pilha.exibe();
+                }
+        );
 
-                pilha.push(donationResponse);
-                System.out.println("Pilhaaaa ");
-                pilha.exibe();
-
-            }
-
-        }
         for (int i = pilha.tamanho(); i >= 0; i--) {
-            System.out.println("contador: " + i + " Tamanho: " + pilha.tamanho());
-            result2.add(pilha.pop());
-            System.out.println("Vetor " + result2);
+            result.add(pilha.pop());
         }
-        System.out.println("exibindo pílha");
-        return result2;
+
+        return result;
     }
 
     @Override
     public Object[] getFila() {
-
         List<DonationResponseDTO> response = getActiveDonation();
         FilaObj filaDonation = new FilaObj<DonationResponseDTO>(response.size());
 
@@ -156,18 +109,7 @@ public class DonationServiceImpl implements DonationService {
         Optional<Donation> foundDonation = donationRepository.findById(donationId);
 
         if (foundDonation.isPresent()) {
-            Donation d = foundDonation.get();
-
-            return new DonationResponseDTO(
-                    d.getDonationId(),
-                    toResponseDTO(d.getFkUser()),
-                    d.getDonationName(),
-                    d.getDonationDescription(),
-                    d.getDonationType(),
-                    d.getDonationTime().toString(),
-                    d.getDonationImage(),
-                    d.getActive()
-            );
+            return this.toDonationResponseDTO(foundDonation.get());
         }
 
         throw new NotFoundException("Doação não foi achada.");
@@ -181,24 +123,9 @@ public class DonationServiceImpl implements DonationService {
         }
 
         List<Donation> favoriteDonations = donationRepository.getFavoriteDonation(ongId);
-        List<DonationResponseDTO> result = new ArrayList<>();
 
-        for (Donation d : favoriteDonations) {
-            DonationResponseDTO donationResponse = new DonationResponseDTO(
-                    d.getDonationId(),
-                    toResponseDTO(d.getFkUser()),
-                    d.getDonationName(),
-                    d.getDonationDescription(),
-                    d.getDonationType(),
-                    d.getDonationTime().toString(),
-                    d.getDonationImage(),
-                    d.getActive()
-            );
 
-            result.add(donationResponse);
-        }
-
-        return result;
+        return favoriteDonations.stream().map(this::toDonationResponseDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -301,13 +228,30 @@ public class DonationServiceImpl implements DonationService {
         throw new NotFoundException("O ID não foi encontrado.");
     }
 
-    private UserResponseDTO toResponseDTO(Long fkUser) {
-        User user = userRepository.findById(fkUser).get();
-        Optional<Address> fullAddress = addressRepository.findById(user.getUserId());
+    private DonationResponseDTO toDonationResponseDTO(Donation d) {
+        return new DonationResponseDTO(
+                d.getDonationId(),
+                toUserResponseDTO(d.getFkUser()),
+                d.getDonationName(),
+                d.getDonationDescription(),
+                d.getDonationType(),
+                d.getDonationTime().toString(),
+                d.getDonationImage(),
+                d.getActive()
+        );
+    }
+
+    private UserResponseDTO toUserResponseDTO(Long fkUser) {
+        Optional<User> user = userRepository.findById(fkUser);
+        if (user.isEmpty()) throw new NotFoundException("");
+
+        Optional<Address> fullAddress = addressRepository.findById(user.get().getUserId());
+        if (fullAddress.isEmpty()) throw new NotFoundException("");
+
         return new UserResponseDTO(
-                user.getUserId(),
-                user.getUsername(),
-                user.getDocument(),
+                user.get().getUserId(),
+                user.get().getUsername(),
+                user.get().getDocument(),
                 new AddressResponseDTO(
                         fullAddress.get().getCep(),
                         fullAddress.get().getStreet(),
@@ -317,9 +261,9 @@ public class DonationServiceImpl implements DonationService {
                         fullAddress.get().getCity(),
                         fullAddress.get().getState()
                 ),
-                user.getPhoneNumber(),
-                user.getEmail(),
-                user.isOng()
+                user.get().getPhoneNumber(),
+                user.get().getEmail(),
+                user.get().isOng()
         );
     }
 }

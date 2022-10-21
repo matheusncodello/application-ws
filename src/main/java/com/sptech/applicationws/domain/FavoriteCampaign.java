@@ -2,7 +2,9 @@ package com.sptech.applicationws.domain;
 
 import com.sptech.applicationws.domain.helpers.FavoriteCampaignId;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity

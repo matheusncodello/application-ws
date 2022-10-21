@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .contact(
                         new Contact(
                                 "T-Veste",
-                                null,
+                                "https://tveste.ddns.net",
                                 null
                         )
                 )
