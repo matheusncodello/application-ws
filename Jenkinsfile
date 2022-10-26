@@ -2,13 +2,13 @@ pipeline {
 	agent any
 	stages {
 		
-		stage('Clean image'){
-			steps {
-				sh "docker stop application_ws"
-				sh "docker rm application_ws"
-				echo "Deploy: STARTING"
-			}
-		}
+		//stage('Clean image'){
+		//	steps {
+		//		sh "docker stop application_ws"
+		//		sh "docker rm application_ws"
+		//		echo "Deploy: STARTING"
+		//	}
+		//}
 		
 		stage('Run docker'){
 			steps {
