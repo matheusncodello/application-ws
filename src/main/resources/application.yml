@@ -29,7 +29,7 @@ spring:
             auto: validate
   h2:
     console:
-      enabled: true
+      enabled: false
       path: /h2-console
       settings:
         trace: false
