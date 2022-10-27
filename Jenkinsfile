@@ -13,6 +13,11 @@ pipeline {
 		stage('Run docker'){
 			steps {
 				sh "docker-compose up -d --build"
+			}
+		}
+		
+		stage('Deploy finish'){
+			steps {
 				echo "Deploy: OK"
 			}
 		}
