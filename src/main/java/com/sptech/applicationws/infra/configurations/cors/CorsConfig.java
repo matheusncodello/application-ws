@@ -15,7 +15,8 @@ public class CorsConfig implements WebMvcConfigurer {
             "https://t-veste.vercel.app",
             "http://44.196.96.99:3000",
             "http://3.212.236.122:3000",
-	    "https://tveste.ddns.net"
+	    "https://tveste.ddns.net",
+	    "https://44.194.11.100"
     };
 
     @Override
